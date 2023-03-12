@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const fs = require("fs");
+const catchAsync = require("../utils/catchAsync");
 const { generateToken } = require("./authController");
 
 const usersFile = "users.json";
@@ -29,7 +30,7 @@ function addUser(username, password) {
   return user;
 }
 
-exports.signup = async (req, res) => {
+exports.signup = catchAsync(async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -52,9 +53,9 @@ exports.signup = async (req, res) => {
 
     await res.status(200).json({ user, token });
   }
-};
+});
 
-exports.login = async (req, res) => {
+exports.login = catchAsync( async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -89,13 +90,13 @@ exports.login = async (req, res) => {
       }
     });
   }
-};
+});
 
-exports.logout = async (req, res) => {
-    await res.status(200).json({
-        status: "success",
-        message: "logged out successfully"
-    })
-}
+exports.logout = catchAsync(async (req, res) => {
+  await res.status(200).json({
+      status: "success",
+      message: "logged out successfully"
+  })
+});
 
 loadUsers();
